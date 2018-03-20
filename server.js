@@ -19,6 +19,6 @@ server.use(function(req, res, next) {
 
 // Routes
 
-server.use('/', mssdnRoutes);
+server.use('/idsr', mssdnRoutes);
 
 module.exports = server;
