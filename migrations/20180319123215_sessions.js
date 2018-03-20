@@ -1,10 +1,11 @@
 exports.up = (knex, Promise) => {
     return knex.schema.createTable('sessions', table => {
-        table.increments('id').primary();
+        table.string('id');
         table.string('sessionid');
         table.string('name');
         table.string('currentmenu');
-        table.string('number_of_retries');
+        table.json('datastore');
+        table.integer('retries');
     });
 };
 

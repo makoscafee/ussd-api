@@ -1,5 +1,6 @@
 const express = require('express');
 import { returnAuthenticationResponse } from './helpers/authentication';
+import { repeatingRequest } from './helpers/repeatingRequest';
 
 const db = require('../db');
 
@@ -12,6 +13,8 @@ const requestHandler = async (req, res) => {
     let response;
     if (isNewRequest) {
         response = await returnAuthenticationResponse(msisdn, sessionid);
+    } else {
+        response = await repeatingRequest(sessionid, USSDRequest);
     }
     res.send(response);
 };
