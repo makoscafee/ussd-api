@@ -1,5 +1,4 @@
 const express = require('express');
-import { getDataStoreFromDHIS2 } from '../queries/dataStore';
 import { returnAuthenticationResponse } from './helpers/authentication';
 
 const db = require('../db');
@@ -10,10 +9,9 @@ const requestHandler = async (req, res) => {
     const { sessionid, telco, USSDRequest, msisdn, USSDType } = req.query;
 
     const isNewRequest = USSDType === 'NR';
-    const dataStore = await getDataStoreFromDHIS2();
     let response;
     if (isNewRequest) {
-        response = await returnAuthenticationResponse(msisdn);
+        response = await returnAuthenticationResponse(msisdn, sessionid);
     }
     res.send(response);
 };

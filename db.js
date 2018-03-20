@@ -1,19 +1,22 @@
-const environment = process.env.NODE_ENV || 'development'
-const config = require('./knexfile')[environment]
-const connection = require('knex')(config)
+const environment = process.env.NODE_ENV || 'development';
+const config = require('./knexfile')[environment];
+const connection = require('knex')(config);
 
-module.exports = {
-  getUser: getUser,
-  getUsers: getUsers
-}
+export const getUser = (id, testConn) => {
+    const conn = testConn || connection;
+    return conn('users')
+        .where('id', id)
+        .first();
+};
 
-function getUsers (testConn) {
-  const conn = testConn || connection
-  return conn('users').select()
-}
+export const addUserSession = (data, testConn) => {
+    const conn = testConn || connection;
+    return conn('sessions').insert(data);
+};
 
-function getUser (id, testConn) {
-  const conn = testConn || connection
-  return conn('users').where('id', id).first()
-}
-
+export const getCurrentSession = (sessionid, testConn) => {
+    const conn = testConn || connection;
+    return conn('sessions')
+        .where('sessionid', sessionid)
+        .first();
+};

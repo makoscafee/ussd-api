@@ -9,6 +9,8 @@ PUSSD-API project with:
 *   body-parser
 *   Jest
 *   nodemon
+*   Babel
+*   r2
 
 ## Install
 
