@@ -15,6 +15,8 @@ export const repeatingRequest = async (sessionid, USSDRequest) => {
         response = checkOptionsAnswer(sessionid, _currentMenu, USSDRequest, menus);
     } else if (_currentMenu.type === 'period') {
         response = checkPeriodAnswer(sessionid, _currentMenu, USSDRequest, menus);
+    } else if (_currentMenu.type === 'message') {
+        response = terminateWithMessage(sessionid, _currentMenu);
     }
     return response;
 };
@@ -71,4 +73,9 @@ const checkPeriodAnswer = async (sessionid, menu, answer, menus) => {
     }
 
     return await returnNextMenu(sessionid, next_menu, menus);
+};
+
+const terminateWithMessage = async (sessionid, menu) => {
+    // TODO: DO other things like deleting session. not to overcloud database.
+    return `C;${sessionid};${menu.title}`;
 };
