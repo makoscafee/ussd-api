@@ -39,3 +39,22 @@ export const getCurrentSession = (sessionid, testConn) => {
         .where('sessionid', sessionid)
         .first();
 };
+
+export const getSessionDataValue = (sessionid, testConn) => {
+    const conn = testConn || connection;
+    return conn('datavalues')
+        .where('sessionid', sessionid)
+        .first();
+};
+
+export const updateSessionDataValues = (sessionid, data, testConn) => {
+    const conn = testConn || connection;
+    return conn('datavalues')
+        .where('sessionid', sessionid)
+        .update(data);
+};
+
+export const addSessionDatavalues = (data, testConn) => {
+    const conn = testConn || connection;
+    return conn('datavalues').insert(data);
+};
