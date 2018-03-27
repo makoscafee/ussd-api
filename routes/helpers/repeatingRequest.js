@@ -3,7 +3,7 @@ import { collectData, submitData, collectPeriodData } from './dataCollection';
 // Deals with curren menu.
 
 const periodTypes = {
-    Weekly: 'w',
+    Weekly: 'W',
     Monthly: '',
     Quoterly: 'Q'
 };
@@ -13,9 +13,6 @@ export const repeatingRequest = async (sessionid, USSDRequest) => {
     const { currentmenu, datastore, retries } = await getCurrentSession(sessionid);
     const menus = JSON.parse(datastore).menus;
     const _currentMenu = menus[currentmenu];
-    if (_currentMenu.submit_data) {
-        const dataResponse = await submitData(sessionid, _currentMenu, menus);
-    }
 
     if (_currentMenu.type === 'auth') {
         if (_currentMenu.number_of_retries && retries >= _currentMenu.number_of_retries) {
@@ -32,6 +29,11 @@ export const repeatingRequest = async (sessionid, USSDRequest) => {
         response = checkPeriodAnswer(sessionid, _currentMenu, USSDRequest, menus);
     } else if (_currentMenu.type === 'message') {
         response = terminateWithMessage(sessionid, _currentMenu);
+    }
+
+    // if you are to submit data submit here.
+    if (_currentMenu.submit_data) {
+        const dataResponse = await submitData(sessionid, _currentMenu, menus);
     }
     return response;
 };
@@ -60,7 +62,10 @@ const returnNextMenu = async (sessionid, next_menu, menus) => {
         const { use_for_year, years_back, number_of_retries } = menu;
         if (use_for_year) {
             const arrayOfYears = getYears(years_back);
-            const msg_str = [menu.title, ...arrayOfYears.map((year, index) => `${index + 1}. ${year}`)].join('\n');
+            const msg_str = [
+                menu.title,
+                ...arrayOfYears.map((year, index) => `${index + 1}. ${year}`)
+            ].join('\n');
             message = `P;${sessionid};${msg_str}`;
         } else {
             message = `P;${sessionid};${menu.title}`;
@@ -105,8 +110,7 @@ const checkPeriodAnswer = async (sessionid, menu, answer, menus) => {
             // TODO: do the retry tings.
         }
     } else {
-        const period = answer.length > 1 ? answer : `0${answer}`;
-        await collectPeriodData(sessionid, { period: `${periodTypes[period_type]}${period}` });
+        await collectPeriodData(sessionid, { period: `${periodTypes[period_type]}${answer}` });
     }
 
     return await returnNextMenu(sessionid, next_menu, menus);

@@ -1,5 +1,5 @@
-import { getUserFromDHIS2 } from '../../queries/users';
-import { getDataStoreFromDHIS2 } from '../../queries/dataStore';
+import { getUserFromDHIS2 } from '../../endpoints/users';
+import { getDataStoreFromDHIS2 } from '../../endpoints/dataStore';
 import { addUserSession, updateUserSession, addSessionDatastore } from '../../db';
 const { generateCode } = require('dhis2-uid');
 
