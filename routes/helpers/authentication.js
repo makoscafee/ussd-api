@@ -12,6 +12,7 @@ export const returnAuthenticationResponse = async (mssdin, sessionid) => {
     if (users.length) {
         const starting_menu = menus[settings.starting_menu];
         const name = users[0].displayName;
+        const orgUnits = users[0].organisationUnits;
         response = `P;${sessionid};${`Welcome ${name} to eIDSR Reporting -- Enter PIN`}`;
         if (users.length > 1) {
             response = `C;${sessionid};This phone number is associated with more than one user`;
@@ -21,6 +22,7 @@ export const returnAuthenticationResponse = async (mssdin, sessionid) => {
                 id,
                 name,
                 sessionid,
+                orgUnit: orgUnits[0].id,
                 currentmenu: starting_menu.id,
                 retries: 0
             };

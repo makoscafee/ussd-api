@@ -6,6 +6,7 @@ exports.up = (knex, Promise) => {
         table.string('currentmenu');
         table.json('datastore');
         table.integer('retries');
+        table.string('orgUnit');
     });
 };
 

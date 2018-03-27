@@ -13,6 +13,10 @@ export const repeatingRequest = async (sessionid, USSDRequest) => {
     const { currentmenu, datastore, retries } = await getCurrentSession(sessionid);
     const menus = JSON.parse(datastore).menus;
     const _currentMenu = menus[currentmenu];
+    if (_currentMenu.submit_data) {
+        const dataResponse = await submitData(sessionid, _currentMenu, menus);
+    }
+
     if (_currentMenu.type === 'auth') {
         if (_currentMenu.number_of_retries && retries >= _currentMenu.number_of_retries) {
             response = `C;${sessionid};${_currentMenu.fail_message}`;
@@ -20,13 +24,8 @@ export const repeatingRequest = async (sessionid, USSDRequest) => {
             response = await checkAuthKey(sessionid, USSDRequest, _currentMenu, menus, retries);
         }
     } else if (_currentMenu.type === 'data') {
-        if (_currentMenu.submit_data) {
-            const dataResponse = await submitData(sessionid, _currentMenu, menus);
-            response = await returnNextMenu(sessionid, _currentMenu.next_menu, menus);
-        } else {
-            response = await collectData(sessionid, _currentMenu, USSDRequest);
-            response = await returnNextMenu(sessionid, _currentMenu.next_menu, menus);
-        }
+        response = await collectData(sessionid, _currentMenu, USSDRequest);
+        response = await returnNextMenu(sessionid, _currentMenu.next_menu, menus);
     } else if (_currentMenu.type === 'options') {
         response = checkOptionsAnswer(sessionid, _currentMenu, USSDRequest, menus);
     } else if (_currentMenu.type === 'period') {
@@ -103,6 +102,7 @@ const checkPeriodAnswer = async (sessionid, menu, answer, menus) => {
             const year = getYears(years_back)[answer - 1];
             await collectPeriodData(sessionid, { year });
         } else {
+            // TODO: do the retry tings.
         }
     } else {
         const period = answer.length > 1 ? answer : `0${answer}`;
