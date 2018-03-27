@@ -35,7 +35,10 @@ export const repeatingRequest = async (sessionid, USSDRequest) => {
     if (_currentMenu.submit_data) {
         const dataResponse = await submitData(sessionid, _currentMenu, menus);
     }
-    return response;
+    return response
+        .split(',')
+        .map(item => item.trim())
+        .join(',');
 };
 
 const checkAuthKey = async (sessionid, response, currentMenu, menus, retries) => {
