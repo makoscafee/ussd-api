@@ -35,10 +35,7 @@ export const repeatingRequest = async (sessionid, USSDRequest) => {
     if (_currentMenu.submit_data) {
         const dataResponse = await submitData(sessionid, _currentMenu, menus);
     }
-    return response
-        .split(',')
-        .map(item => item.trim())
-        .join(',');
+    return response;
 };
 
 const checkAuthKey = async (sessionid, response, currentMenu, menus, retries) => {
@@ -71,7 +68,12 @@ const returnNextMenu = async (sessionid, next_menu, menus) => {
             ].join('\n');
             message = `P;${sessionid};${msg_str}`;
         } else {
-            message = `P;${sessionid};${menu.title}`;
+            const title = menu.title;
+            const msg = title
+                .split(',')
+                .map(item => item.trim())
+                .join(',');
+            message = `P;${sessionid};${msg}`;
         }
     } else if (menu.type === 'message') {
         message = await terminateWithMessage(sessionid, menu);
