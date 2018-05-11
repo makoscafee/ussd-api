@@ -108,9 +108,7 @@ const sendEventData = async (sessionid, program, programStage) => {
     const sessionDatavalues = await getSessionDataValue(sessionid);
     const sessions = await getCurrentSession(sessionid);
     const {
-        dataValues,
-        year,
-        period
+        dataValues
     } = sessionDatavalues;
     const {
         orgUnit
@@ -123,6 +121,7 @@ const sendEventData = async (sessionid, program, programStage) => {
         dataElement,
         value
     }));
+
     const today = new Date();
     const day = today.getDate();
     const month = today.getMonth() + 1; //January is 0!
