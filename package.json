@@ -27,6 +27,7 @@
         "express": "^4.16.2",
         "express-handlebars": "^3.0.0",
         "knex": "^0.14.2",
+        "make-fetch-happen": "^3.0.0",
         "morgan": "^1.8.0",
         "node-fetch": "^2.1.2",
         "r2": "^2.0.0",

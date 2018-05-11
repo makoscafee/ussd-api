@@ -68,12 +68,7 @@ const returnNextMenu = async (sessionid, next_menu, menus) => {
             ].join('\n');
             message = `P;${sessionid};${msg_str}`;
         } else {
-            const title = menu.title;
-            const msg = title
-                .split(',')
-                .map(item => item.trim())
-                .join(',');
-            message = `P;${sessionid};${msg}`;
+            message = `P;${sessionid};${menu.title}`;
         }
     } else if (menu.type === 'message') {
         message = await terminateWithMessage(sessionid, menu);
