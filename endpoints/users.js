@@ -8,7 +8,6 @@ export const getUserFromDHIS2 = async phoneNumber => {
             Authorization
         }
     });
-    console.log(response);
 
     const data = await response.json();
     return data;

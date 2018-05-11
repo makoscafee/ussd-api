@@ -1,14 +1,16 @@
-exports.up = function(knex, Promise) {
+exports.up = function (knex, Promise) {
     return knex.schema.createTable('datavalues', table => {
         table.increments('id').primary();
         table.string('sessionid');
         table.string('period');
         table.string('year');
         table.string('datatype');
+        table.string('program');
+        table.string('programStage');
         table.json('dataValues').defaultTo('[]');
     });
 };
 
-exports.down = function(knex, Promise) {
+exports.down = function (knex, Promise) {
     return knex.schema.dropTable('datavalues');
 };
