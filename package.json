@@ -24,6 +24,7 @@
         "compression": "^1.5.2",
         "cors": "^2.7.1",
         "dhis2-uid": "^0.1.2",
+        "dotenv": "^5.0.1",
         "express": "^4.16.2",
         "express-handlebars": "^3.0.0",
         "knex": "^0.14.2",
