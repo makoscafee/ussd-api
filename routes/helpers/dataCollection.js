@@ -71,10 +71,10 @@ const sendAggregateData = async sessionid => {
     period: finalPeriod,
     orgUnit
   }));
-  const data = await postAggregateData({
+  const response = await postAggregateData({
     dataValues: dtArray
   });
-  return data;
+  return response;
 };
 
 const sendEventData = async (sessionid, program, programStage) => {
@@ -93,7 +93,7 @@ const sendEventData = async (sessionid, program, programStage) => {
   const month = today.getMonth() + 1; //January is 0!
   const year = today.getFullYear();
 
-  const data = await postEventData({
+  const response = await postEventData({
     program,
     programStage,
     eventDate: `${year}-${month}-${day}`,
@@ -101,5 +101,5 @@ const sendEventData = async (sessionid, program, programStage) => {
     status: 'COMPLETED',
     dataValues: dtArray
   });
-  return data;
+  return response;
 };

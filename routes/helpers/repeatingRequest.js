@@ -8,6 +8,8 @@ const periodTypes = {
   Quoterly: 'Q'
 };
 
+const OK = 'OK';
+
 export const repeatingRequest = async (sessionid, USSDRequest) => {
   let response;
   const { currentmenu, datastore, retries } = await getCurrentSession(sessionid);
@@ -23,12 +25,12 @@ export const repeatingRequest = async (sessionid, USSDRequest) => {
   } else if (_currentMenu.type === 'data') {
     const { options } = _currentMenu;
     if (options && options.length) {
-      const { passed, correctOption } = checkOptionSetsAnswer(sessionid, _currentMenu, USSDRequest);
+      const { passed, correctOption } = await checkOptionSetsAnswer(sessionid, _currentMenu, USSDRequest);
       if (passed) {
         response = await collectData(sessionid, _currentMenu, correctOption);
         response = await returnNextMenu(sessionid, _currentMenu.next_menu, menus);
       } else {
-        response = `C;${sessionid};${menu.fail_message || 'You did not enter the correct choice'}`;
+        response = `C;${sessionid};${_currentMenu.fail_message || 'You did not enter the correct choice'}`;
       }
     } else {
       response = await collectData(sessionid, _currentMenu, USSDRequest);
@@ -44,7 +46,10 @@ export const repeatingRequest = async (sessionid, USSDRequest) => {
 
   // if you are to submit data submit here.
   if (_currentMenu.submit_data) {
-    const dataResponse = await submitData(sessionid, _currentMenu, menus);
+    const { httpStatus, httpStatusCode, message } = await submitData(sessionid, _currentMenu, menus);
+    if (httpStatus !== OK) {
+      response = `C;${sessionid};${message}`;
+    }
   }
   return response;
 };
