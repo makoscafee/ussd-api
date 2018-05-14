@@ -5,6 +5,7 @@ import { collectData, submitData, collectPeriodData } from './dataCollection';
 const periodTypes = {
   Weekly: 'W',
   Monthly: '',
+  BiMonthly: 'S',
   Quoterly: 'Q'
 };
 
