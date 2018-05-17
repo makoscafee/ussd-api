@@ -26,10 +26,14 @@ export const repeatingRequest = async (sessionid, USSDRequest) => {
   } else if (_currentMenu.type === 'data') {
     const { options } = _currentMenu;
     if (options && options.length) {
-      const { passed, correctOption } = await checkOptionSetsAnswer(sessionid, _currentMenu, USSDRequest);
+      const { passed, correctOption, next_menu_response } = await checkOptionSetsAnswer(sessionid, _currentMenu, USSDRequest, menus);
       if (passed) {
         response = await collectData(sessionid, _currentMenu, correctOption);
-        response = checkOptionsAnswer(sessionid, _currentMenu, USSDRequest, menus);
+        if (next_menu_response) {
+          response = next_menu_response;
+        } else {
+          response = await returnNextMenu(sessionid, _currentMenu.next_menu, menus);
+        }
       } else {
         response = `C;${sessionid};${_currentMenu.fail_message || 'You did not enter the correct choice'}`;
       }
@@ -113,20 +117,25 @@ const checkOptionsAnswer = async (sessionid, menu, answer, menus) => {
 };
 
 // Option Answers.
-const checkOptionSetsAnswer = async (sessionid, menu, answer) => {
+const checkOptionSetsAnswer = async (sessionid, menu, answer, menus) => {
   const { options } = menu;
   const responses = options.map(option => option.response);
   let passed = true;
   let correctOption = null;
+  let next_menu_response = null;
   if (!responses.includes(answer)) {
     passed = !passed;
   } else {
-    const { value } = options.filter(option => option.response === answer)[0];
+    const { value, next_menu } = options.filter(option => option.response === answer)[0];
+    if (next_menu) {
+      next_menu_response = await returnNextMenu(sessionid, next_menu, menus);
+    }
     correctOption = value;
   }
   return {
     passed,
-    correctOption
+    correctOption,
+    next_menu_response
   };
 };
 
