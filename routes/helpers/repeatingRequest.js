@@ -29,7 +29,7 @@ export const repeatingRequest = async (sessionid, USSDRequest) => {
       const { passed, correctOption } = await checkOptionSetsAnswer(sessionid, _currentMenu, USSDRequest);
       if (passed) {
         response = await collectData(sessionid, _currentMenu, correctOption);
-        response = await returnNextMenu(sessionid, _currentMenu.next_menu, menus);
+        response = checkOptionsAnswer(sessionid, _currentMenu, USSDRequest, menus);
       } else {
         response = `C;${sessionid};${_currentMenu.fail_message || 'You did not enter the correct choice'}`;
       }
