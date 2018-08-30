@@ -19,7 +19,7 @@ npm install
 npm knex migrate:latest
 npm knex seed:run
 
-pm2 start yarn --no-automation --name ussd-api -- run dev
+pm2 start npm --no-automation --name ussd-api -- run dev
 
 pm2 startup
 ```
