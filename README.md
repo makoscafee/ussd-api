@@ -2,23 +2,24 @@
 
 PUSSD-API project with:
 
-*   Express
-*   Knex
-*   SQLite3
-*   Express Handlebars
-*   body-parser
-*   Jest
-*   nodemon
-*   Babel
-*   r2
+- Express
+- Knex
+- SQLite3
+- Express Handlebars
+- body-parser
+- Jest
+- nodemon
+- Babel
+- r2
 
 ## Install
 
 ```
-yarn
-yarn knex migrate:latest
-yarn knex seed:run
-yarn dev
-```
+npm install
+npm knex migrate:latest
+npm knex seed:run
 
-Be sure to check out the other npm scripts too.
+pm2 start yarn --no-automation --name ussd-api -- run dev
+
+pm2 startup
+```
