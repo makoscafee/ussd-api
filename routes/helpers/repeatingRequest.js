@@ -65,7 +65,7 @@ export const repeatingRequest = async (sessionid, USSDRequest) => {
     } else {
       const { httpStatus, httpStatusCode, message } = await submitData(sessionid, _currentMenu, menus);
       if (httpStatus !== OK) {
-        response = `C;${sessionid};${message}`;
+        response = `C;${sessionid};Terminating the session`;
       }
     }
   }
