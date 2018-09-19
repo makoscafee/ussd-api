@@ -9,6 +9,7 @@ const periodTypes = {
   Quoterly: 'Q'
 };
 
+const dataSubmissionOptions = [true, false];
 const OK = 'OK';
 
 export const repeatingRequest = async (sessionid, USSDRequest) => {
@@ -44,16 +45,28 @@ export const repeatingRequest = async (sessionid, USSDRequest) => {
   } else if (_currentMenu.type === 'options') {
     response = checkOptionsAnswer(sessionid, _currentMenu, USSDRequest, menus);
   } else if (_currentMenu.type === 'period') {
-    response = checkPeriodAnswer(sessionid, _currentMenu, USSDRequest, menus);
+    response = await checkPeriodAnswer(sessionid, _currentMenu, USSDRequest, menus);
   } else if (_currentMenu.type === 'message') {
     response = terminateWithMessage(sessionid, _currentMenu);
   }
 
   // if you are to submit data submit here.
   if (_currentMenu.submit_data) {
-    const { httpStatus, httpStatusCode, message } = await submitData(sessionid, _currentMenu, menus);
-    if (httpStatus !== OK) {
-      response = `C;${sessionid};${message}`;
+    if ((_currentMenu.type = 'data-submission')) {
+      if (dataSubmissionOptions[USSDRequest - 1]) {
+        const { httpStatus, httpStatusCode, message } = await submitData(sessionid, _currentMenu, menus);
+        if (httpStatus !== OK) {
+          response = `C;${sessionid};${message}`;
+        }
+        response = await returnNextMenu(sessionid, _currentMenu.next_menu, menus);
+      } else {
+        response = `C;${sessionid};Terminating the session`;
+      }
+    } else {
+      const { httpStatus, httpStatusCode, message } = await submitData(sessionid, _currentMenu, menus);
+      if (httpStatus !== OK) {
+        response = `C;${sessionid};${message}`;
+      }
     }
   }
   return response;
@@ -99,6 +112,10 @@ const returnNextMenu = async (sessionid, next_menu, menus) => {
     }
   } else if (menu.type === 'message') {
     message = await terminateWithMessage(sessionid, menu);
+  } else if (menu.type === 'data-submission') {
+    const submitOptions = ['YES', 'NO'];
+    const submitMsgString = [menu.title, ...submitOptions.map((year, index) => `${index + 1}. ${year}`)].join('\n');
+    message = `P;${sessionid};${submitMsgString}`;
   }
   return message;
 };
@@ -167,7 +184,9 @@ const checkPeriodAnswer = async (sessionid, menu, answer, menus) => {
     });
   }
 
-  return await returnNextMenu(sessionid, next_menu, menus);
+  const getNextMenu = await returnNextMenu(sessionid, next_menu, menus);
+
+  return getNextMenu;
 };
 
 const terminateWithMessage = async (sessionid, menu) => {
