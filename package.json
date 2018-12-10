@@ -1,0 +1,18 @@
+{
+  "name": "ussd-node",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "author": {
+    "email": "barnabasmakonda@hisptanzania.org",
+    "name": "Barnabas Makonda",
+    "url": "https://barniemakonda.me"
+  },
+  "scripts": {
+    "start": "node index"
+  },
+  "dependencies": {
+    "koa": "^2.6.2",
+    "koa-route": "^3.2.0"
+  }
+}
